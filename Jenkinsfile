@@ -1,9 +1,20 @@
 pipeline {
      agent {
-          docker {
-               image 'maven:3.9-amazoncorretto-21'  
-               args '-p 33333:8090' 
-          }
+        kubernetes {
+            yaml """
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - name: maven
+            image: maven:3.9-amazoncorretto-21
+            command:
+            - cat
+            tty: true
+            ports:
+            - containerPort: 8090
+        """
+        }
      }
      environment {
           HOME = '.'
